@@ -4,6 +4,7 @@ import time
 
 import gevent
 import grpc
+
 # patch grpc so that it uses gevent instead of asyncio
 import grpc.experimental.gevent as grpc_gevent
 from core.user_credentials import *
@@ -12,14 +13,20 @@ from locust import User, constant, task
 from locust.exception import LocustError
 from locust.user.task import LOCUST_STATE_STOPPING
 
-from protobufs import (auth_service_pb2, auth_service_pb2_grpc,
-                       vacancy_service_pb2, vacancy_service_pb2_grpc)
+from protobufs import (
+    auth_service_pb2,
+    auth_service_pb2_grpc,
+    vacancy_service_pb2,
+    vacancy_service_pb2_grpc,
+)
 
 grpc_gevent.init_gevent()
 
 logger = logging.getLogger(__name__)
 
-SERVER_ADDRESS = os.environ.get('SERVER_ADDRESS', "138.197.190.181:7823")
+SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "138.197.190.181:7823")
+
+
 class GrpcClient:
     def __init__(self, environment, stub):
         self.env = environment

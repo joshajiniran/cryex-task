@@ -1,6 +1,6 @@
 import logging
 from grpc._channel import _InactiveRpcError
-from  grpc import RpcError
+from grpc import RpcError
 
 import faker
 from locust import SequentialTaskSet, task
