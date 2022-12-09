@@ -3,17 +3,20 @@ import time
 
 import gevent
 import grpc
+
 # patch grpc so that it uses gevent instead of asyncio
 import grpc.experimental.gevent as grpc_gevent
-from core.auth import get_user_from_token
 from core.vacancy import UserVacancyTaskSet
-from locust import SequentialTaskSet, User, events, constant
+from locust import User, constant, task
 from locust.exception import LocustError
 from locust.user.task import LOCUST_STATE_STOPPING
 
-from protobufs import (auth_service_pb2, auth_service_pb2_grpc,
-                       user_service_pb2, user_service_pb2_grpc,
-                       vacancy_service_pb2, vacancy_service_pb2_grpc)
+from protobufs import (
+    auth_service_pb2,
+    auth_service_pb2_grpc,
+    vacancy_service_pb2,
+    vacancy_service_pb2_grpc,
+)
 
 grpc_gevent.init_gevent()
 
@@ -21,10 +24,11 @@ logger = logging.getLogger(__name__)
 
 
 USERS = [
-    ('josuajiniran@gmail.com', 'josh1000'),
-    ('joshuajiniran@yahoo.com', 'shegz100'),
-    ('joshajiniran@outlook.com', 'joshaj001')
+    ("josuajiniran@gmail.com", "josh1000"),
+    ("joshuajiniran@yahoo.com", "shegz100"),
+    ("joshajiniran@outlook.com", "joshaj001"),
 ]
+
 
 class GrpcClient:
     def __init__(self, environment, stub):
@@ -48,10 +52,12 @@ class GrpcClient:
             start_perf_counter = time.perf_counter()
             try:
                 request_meta["response"] = func(*args, **kwargs)
-                # request_meta["response_length"] = len(request_meta["response"])
+                # request_meta["response_length"] = len(request_meta["response"].message)
             except grpc.RpcError as e:
                 request_meta["exception"] = e
-            request_meta["response_time"] = (time.perf_counter() - start_perf_counter) * 1000
+            request_meta["response_time"] = (
+                time.perf_counter() - start_perf_counter
+            ) * 1000
             self.env.events.request.fire(**request_meta)
             return request_meta["response"]
 
@@ -65,7 +71,10 @@ class GrpcUser(User):
 
     def __init__(self, environment):
         super().__init__(environment)
-        for attr_value, attr_name in ((self.host, "host"), (self.stub_class, "stub_class")):
+        for attr_value, attr_name in (
+            (self.host, "host"),
+            (self.stub_class, "stub_class"),
+        ):
             if attr_value is None:
                 raise LocustError(f"You must specify the {attr_name}.")
 
@@ -87,9 +96,30 @@ class SignedInGrpcUser(GrpcUser):
             self.email, self.password = USERS.pop()
             self.token = self.login(self.email, self.password)
 
-
     def login(self, email: str, pswd: str) -> str:
-        client = GrpcClient(self.environment, auth_service_pb2_grpc.AuthServiceStub(self._channel))
+        client = GrpcClient(
+            self.environment, auth_service_pb2_grpc.AuthServiceStub(self._channel)
+        )
         if not self._channel_closed:
-            response = client.SignInUser(auth_service_pb2.rpc__signin__user__pb2.SignInUserInput(email=email, password=pswd))
+            response = client.SignInUser(
+                auth_service_pb2.rpc__signin__user__pb2.SignInUserInput(
+                    email=email, password=pswd
+                )
+            )
         return response.access_token
+
+
+class SignedInGrpcUserAllVacancies(GrpcUser):
+    host = "138.197.190.181:7823"
+    stub_class = vacancy_service_pb2_grpc.VacancyServiceStub
+    wait_time = constant(45)
+
+    @task
+    def fetch_all_vacancies(self):
+
+        if not self._channel_closed:
+            stream_response = self.client.GetVacancies(
+                vacancy_service_pb2.GetVacanciesRequest(page=1, limit=10)
+            )
+            for resp in stream_response:
+                logger.info(resp)
