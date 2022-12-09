@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  locust-script:
+    container_name: "locust-script"
+    entrypoint: ["./entrypoint.sh"]
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - 8009:8009

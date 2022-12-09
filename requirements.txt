@@ -1,0 +1,7 @@
+cryptography==38.0.4
+faker==15.3.4
+grpcio==1.51.1
+grpcio-tools==1.51.1
+grpc-interceptor==0.15.0
+locust==2.13.1
+PyJWT==2.6.0
