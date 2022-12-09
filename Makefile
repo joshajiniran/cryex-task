@@ -8,6 +8,9 @@ compose-build:
 compose-run:
 	$(COMPOSE) up
 
+compose-down:
+	$(COMPOSE) down
+
 run:
 	locust -f scripts/locustfile.py
 
