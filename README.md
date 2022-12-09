@@ -52,6 +52,9 @@ or
 make compose-run
 ```
 
+### Reports
+Response time and failure reports can be found here [reports](https://github.com/joshajiniran/cryex-task/tree/main/reports)
+
 ### Cleanup
 To clear the generated protobufs, run:
 ```
