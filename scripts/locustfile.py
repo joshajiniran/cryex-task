@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 
 import gevent
@@ -6,6 +7,7 @@ import grpc
 
 # patch grpc so that it uses gevent instead of asyncio
 import grpc.experimental.gevent as grpc_gevent
+from core.user_credentials import *
 from core.vacancy import UserVacancyTaskSet
 from locust import User, constant, task
 from locust.exception import LocustError
@@ -22,12 +24,7 @@ grpc_gevent.init_gevent()
 
 logger = logging.getLogger(__name__)
 
-
-USERS = [
-    ("josuajiniran@gmail.com", "josh1000"),
-    ("joshuajiniran@yahoo.com", "shegz100"),
-    ("joshajiniran@outlook.com", "joshaj001"),
-]
+SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "138.197.190.181:7823")
 
 
 class GrpcClient:

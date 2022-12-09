@@ -72,7 +72,7 @@ josuajiniran@gmail.com
 ## Version History
 
 - 0.1.1 (coming)
+  - Run script headless
   - Find fix for generated protobufs Python import issues
-  - Deploy using Kubernetes
 - 0.1.0
   - Initial Release

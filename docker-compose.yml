@@ -5,7 +5,9 @@ services:
     container_name: "locust-script"
     entrypoint: ["./entrypoint.sh"]
     build: .
-    restart: always
+    restart: unless-stopped
+    env_file:
+      - ./.env
     volumes:
       - .:/app
     ports:
