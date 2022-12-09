@@ -2,8 +2,11 @@ COMPOSE = docker-compose -f docker-compose.yml
 
 SERVICE = script
 
-build:
+compose-build:
 	$(COMPOSE) up --build
+
+compose-run:
+	$(COMPOSE) up
 
 run:
 	locust -f scripts/locustfile.py
