@@ -5,3 +5,4 @@ grpcio-tools==1.51.1
 grpc-interceptor==0.15.0
 locust==2.13.1
 PyJWT==2.6.0
+python-dotenv==0.21.0

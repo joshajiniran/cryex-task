@@ -1,5 +1,3 @@
-import logging
-import os
 import time
 
 import gevent
@@ -7,6 +5,7 @@ import grpc
 
 # patch grpc so that it uses gevent instead of asyncio
 import grpc.experimental.gevent as grpc_gevent
+from core import SERVER_ADDRESS, logger
 from core.user_credentials import *
 from core.vacancy import UserVacancyTaskSet
 from locust import User, constant, task
@@ -21,10 +20,6 @@ from protobufs import (
 )
 
 grpc_gevent.init_gevent()
-
-logger = logging.getLogger(__name__)
-
-SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "138.197.190.181:7823")
 
 
 class GrpcClient:
@@ -83,7 +78,7 @@ class GrpcUser(User):
 
 class SignedInGrpcUser(GrpcUser):
     tasks = [UserVacancyTaskSet]
-    host = "138.197.190.181:7823"
+    host = SERVER_ADDRESS
     stub_class = vacancy_service_pb2_grpc.VacancyServiceStub
     token = ""
     wait_time = constant(30)
@@ -107,7 +102,7 @@ class SignedInGrpcUser(GrpcUser):
 
 
 class SignedInGrpcUserAllVacancies(GrpcUser):
-    host = "138.197.190.181:7823"
+    host = SERVER_ADDRESS
     stub_class = vacancy_service_pb2_grpc.VacancyServiceStub
     wait_time = constant(45)
 
