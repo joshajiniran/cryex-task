@@ -1,13 +1,9 @@
-import logging
-from grpc._channel import _InactiveRpcError
-from grpc import RpcError
-
 import faker
+from core import logger
+from grpc import RpcError
 from locust import SequentialTaskSet, task
 
 from protobufs import vacancy_service_pb2
-
-logger = logging.getLogger(__name__)
 
 fake = faker.Faker()
 

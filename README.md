@@ -18,8 +18,8 @@ The API was tested on Linux Ubuntu 20.04 and Python 3.10.4.
 ### Building script dependencies
 ```
 make gen (Do this if you have not generated protobufs from the proto files)
-NB: There was this gotcha of having to fix the absolute imports of some probufs otherwise there would be module import error
 ```
+NB: There was this gotcha of having to fix the absolute imports of some probufs otherwise there would be module import error
 
 ### Running the script locally
 
@@ -42,9 +42,10 @@ make run
 ### Running the app with docker-compose
 
 You can run the script with docker-compose using the command
+Build and run the image, do this if it's first time
 
 ```
-make compose-build (build and run the image, do this if it's first time)
+make compose-build
 ```
 or
 
@@ -53,7 +54,7 @@ make compose-run
 ```
 
 ### Reports
-Response time and failure reports can be found here [reports](https://github.com/joshajiniran/cryex-task/tree/main/reports)
+Response time (the files with latest) and failure reports can be found here [reports](https://github.com/joshajiniran/cryex-task/tree/main/reports)
 
 ### Cleanup
 To clear the generated protobufs, run:
